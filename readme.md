@@ -1,13 +1,10 @@
 <p align="center">
   <img src="res/fawn_icon.ico" alt="Fawn logo" width="96" height="96">
 </p>
-
 <h1 align="center">Fawn</h1>
-
 <p align="center">
   A small, beginner-friendly scripting language built from scratch in C++.
 </p>
-
 <p align="center">
   <img alt="version" src="https://img.shields.io/badge/version-1.5.0-blue">
   <img alt="language" src="https://img.shields.io/badge/language-C%2B%2B20-informational">
@@ -15,17 +12,15 @@
   <img alt="license" src="https://img.shields.io/badge/license-MIT-green">
 </p>
 
-
 ---
 
 ## Table of Contents
-
 - [Overview](#overview)
 - [Architecture](#architecture)
 - [The Story](#the-story)
 - [Getting Started](#getting-started)
-  - [Build from source](#build-from-source)
   - [Windows installer](#windows-installer)
+  - [Build from source](#build-from-source-linux)
 - [CLI Reference](#cli-reference)
 - [Cheatsheet](#cheatsheet)
   - [Variables](#variables)
@@ -53,9 +48,9 @@
 Fawn is a tree-walking interpreted language with:
 
 - **Optional static typing** — declare variables as `int`, `float`, `string`, `bool` for enforced type-locking, or use `var` for dynamic typing. Mixing is allowed within the same script.
-- **No Indentation Pitfall** — Personally i find myself struglling with pythons's indentation logics, So i decided to go with classical way.
-- **C++-flavored I/O** — The language is heavily inspired by c++ and i personally found cout usefull for chaning outputs easily so I  borrowed`out << value << end` and `in >> variable`, from `cout`/`cin`. If you like good old `print`, that is included too.
-- **Functions with optional return-type enforcement** — declare `: int` and the function is locked to that return type at runtime; leave it off and it can return anything. Default parameter values are supported.
+- **No indentation pitfall** — I found myself struggling with Python's indentation rules, so I decided to go with the classical brace-based approach instead.
+- **C++-flavored I/O** — the language is heavily inspired by C++, and I've always found `cout` useful for chaining output easily, so I borrowed `out << value << end` and `in >> variable` from `cout`/`cin`. If you prefer good old `print`, that's included too.
+- **Functions with optional return-type enforcement** — declare `: int` and the function is locked to that type at runtime; leave it off and it can return anything. Default parameter values are supported.
 
 ## Architecture
 
@@ -65,17 +60,16 @@ source (.fw) → Lexer → Tokens → Parser → AST → Interpreter (tree-walki
 
 - **Lexer**: single-pass, maximal-munch tokenizer. Handles string escapes, comments, and multi-character operators (`==`, `===`, `<<`, `>>`, `->`, etc.).
 - **Parser**: recursive-descent with precedence climbing for expressions (`or → and → equality → comparison → term → factor → unary → call → primary`). Produces a plain-data AST (`Expr`/`Stmt` hierarchies).
-- **Interpreter**: a separate class that walks the AST via `dynamic_cast` dispatch (Because i find out about the visitor pattern when most of the interpreter was alrredy written 🙂 )
+- **Interpreter**: a separate class that walks the AST via `dynamic_cast` dispatch (because I only learned about the visitor pattern after most of the interpreter was already written 🙂).
 - **Environment**: a chained scope model, backing block scoping, function-call scoping, and loop-variable scoping.
 - **Value**: a `std::variant`-based dynamically-tagged runtime value, with type-promotion rules for mixed arithmetic (`int + float → float`) and both loose (`==`) and strict, type-aware (`===`) equality.
 - **Control-flow unwinding** (`return`, `break`) implemented via lightweight C++ exceptions caught at the appropriate boundary (loop body vs. function call site).
 
-Currently a tree-walking interpreter (not yet compiled to bytecode). A bytecode VM is a possible future direction once if i ever wanted to continue developing this language.
+Currently a tree-walking interpreter (not yet compiled to bytecode). A bytecode VM is a possible future direction if I ever decide to keep developing this language.
 
 ## The Story
 
-*Before moving on i want to share how the project even started if you dont want to read this skip to* [Getting Started](#getting-started)
-
+*Before moving on, I want to share how the project got started. If you don't want to read this, skip to* [Getting Started](#getting-started).
 
 So it all started when I was learning Vulkan.
 
@@ -85,19 +79,19 @@ At the time, I'd been coding in C++ for around two and a half years, but I had b
 
 That got me thinking: *If I can read a file, can I use that file to produce some kind of output?*
 
-So I opened a new project and started experimenting. And after juggling with some `if` statements i finally abeled to print **"Hello World"** in the console.
+So I opened a new project and started experimenting. And after juggling with some `if` statements, I finally managed to print **"Hello World"** in the console.
 
 Then I thought, *Well, if I can print "Hello World", can I make a multiline statement? And if I can do that, can I make my own scripting language?*
 
 And that's basically how it started.
 
- I'd say around 85% (15% for generating logo, making this readme emotional -_- and debugging some stuffs) of the project was written with my bare hands, I literally spent about an hour and a half going through a dictionary trying to find a name that wasn't already being used(+1 for my dedication :) ) — well, finally the dictionary got some usage.
+I'd say around 85% of the project was written with my bare hands (the other 15% went to generating the logo, making this README overly emotional -_-, and debugging some stuff). I literally spent about an hour and a half going through a dictionary trying to find a name that wasn't already taken (+1 for my dedication :) ) — well, the dictionary finally got some use.
 
 The project went through a lot of changes along the way. At first, I wanted to make a completely ridiculous joke language. Later, I decided to take it in a different direction and build something simple, readable, and actually usable.
 
 I don't know why I made this — maybe I'm stupid as hell — but hey, I had a lot of fun building it. Seeing everything finally come together and behave the way I imagined was incredibly satisfying.
 
-To be honest the language is ridiculously slow just pretend you dont care about speed okay :0 (if you do just wait for a while i make the VM 🥀)
+To be honest, the language is ridiculously slow, so just pretend you don't care about speed for now :0 (if you do, just wait a while — I'll get around to making the VM 🥀).
 
 If you enjoy the language or just like the idea behind it, consider leaving a star on the repository. It would mean a lot.
 
@@ -105,9 +99,11 @@ If you enjoy the language or just like the idea behind it, consider leaving a st
 
 ## Getting Started
 
-**If you are using a windows Machine:**
+### Windows installer
 
-1. Head to the [Releases](../../releases) section and download the latest windows installer.
+**If you're using a Windows machine:**
+
+1. Head to the [Releases](../../releases) section and download the latest Windows installer.
 2. Run the installer and follow the setup wizard.
 
 The installer automatically adds Fawn to your system `PATH`. Open a new terminal and verify the installation:
@@ -124,15 +120,16 @@ If for some reason it shows `fawn` isn't recognized, add it to `PATH` manually:
 4. Click **New** and add the folder where `fawn.exe` was installed (e.g. `C:\Program Files\Fawn`).
 5. Click **OK** on all windows, then open a new terminal for the change to take effect.
 
-## Linux/Build from source
+### Build from source (Linux)
 
 > Pre-built Linux binaries aren't available yet — build from source using CMake.
 
-### Prerequisites
+#### Prerequisites
+
 - CMake 3.20+
 - A C++20-capable compiler (GCC or Clang)
 
-### Build
+#### Build
 
 ```bash
 git clone https://github.com/AnkanDey05/Fawn-Language.git
@@ -141,20 +138,19 @@ cmake -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build
 ```
 
-### Verify
+#### Verify
 
 ```bash
 ./build/fawn --v
 ```
 
-### Install (optional)
+#### Install (optional)
 
 To use `fawn` from anywhere without typing the full path:
 
 ```bash
 sudo cp build/fawn /usr/local/bin/
 ```
-
 
 ## CLI Reference
 
@@ -205,8 +201,8 @@ and  or  not                // logical
 ```fawn
 out << "Hello" << " " << "world" << end   // stream-style output, 'end' = newline
 out << "no newline here"                   // 'end' is optional
-
 print("Hello World")                     // also supported
+
 int x
 in >> x                                     // reads a line into an existing variable
 println("Variable is: ", x)              // add a new line
@@ -398,7 +394,7 @@ Indexing (`arr[i]`, `arr[i] = x`) is also supported directly.
 ## Project Structure
 
 ```
-Flow/
+Fawn/
 ├── src/
 │   ├── lexer/        # Tokenizer
 │   ├── parser/         # Recursive-descent parser
@@ -419,10 +415,8 @@ Flow/
 
 The `examples/` directory contains runnable sample scripts, including:
 
-
 - `blackjack.fw` — a card game implementation
-- `snake.fw` - the classic snake game(might not work depanding on your terminal because it relies on ascii escape sequesce)
-
+- `snake.fw` — the classic snake game (might not work depending on your terminal, since it relies on ASCII escape sequences)
 
 Run any of them with:
 
