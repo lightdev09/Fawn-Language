@@ -57,8 +57,34 @@ void Env::assign(const Token& nameToken, Value val)
             throw FatalError();
         }
         if (!it->second.isDynamic) {
-            if (it->second.declaredType == "float" && val.isInt()) val = Value(static_cast<float>(val.asInt()));
-            else if (it->second.declaredType == "int" && val.isFloat()) val = Value(static_cast<int>(val.asFloat()));
+            if (it->second.declaredType == "float") {
+                if (val.isInt()) {
+                    val = Value(static_cast<float>(val.asInt()));
+                } else if (val.isString()) {
+                    try {
+                        val = Value(std::stof(val.asString()));
+                    } catch (...) {}
+                }
+            } else if (it->second.declaredType == "int") {
+                if (val.isFloat()) {
+                    val = Value(static_cast<int>(val.asFloat()));
+                } else if (val.isBool()) {
+                    val = Value(val.asBool() ? 1 : 0);
+                } else if (val.isString()) {
+                    try {
+                        const std::string& str = val.asString();
+                        if (str.find('.') != std::string::npos) {
+                            val = Value(static_cast<int>(std::stof(str)));
+                        } else {
+                            val = Value(std::stoi(str));
+                        }
+                    } catch (...) {}
+                }
+            } else if (it->second.declaredType == "string") {
+                if (!val.isString()) {
+                    val = Value(val.stringify());
+                }
+            }
             std::string actual = val.getTypeAsString();
             bool matches =
                 (it->second.declaredType == "int" && val.isInt()) ||

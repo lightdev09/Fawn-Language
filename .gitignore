@@ -2,6 +2,7 @@
 build/
 out/
 eg/
+test/
 cmake-build-*/
 
 # CMake generated files

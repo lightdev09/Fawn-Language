@@ -87,8 +87,34 @@ void Interpreter::execute(Stmt* statement)
     if (varDecl->initializer) {
         value = evaluate(varDecl->initializer.get());
         std::string declType = varDecl->type.m_lexeme;
-        if (declType == "float" && value.isInt()) value = Value(static_cast<float>(value.asInt()));
-        else if (declType == "int" && value.isFloat()) value = Value(static_cast<int>(value.asFloat()));
+        if (declType == "float") {
+            if (value.isInt()) {
+                value = Value(static_cast<float>(value.asInt()));
+            } else if (value.isString()) {
+                try {
+                    value = Value(std::stof(value.asString()));
+                } catch (...) {}
+            }
+        } else if (declType == "int") {
+            if (value.isFloat()) {
+                value = Value(static_cast<int>(value.asFloat()));
+            } else if (value.isBool()) {
+                value = Value(value.asBool() ? 1 : 0);
+            } else if (value.isString()) {
+                try {
+                    const std::string& str = value.asString();
+                    if (str.find('.') != std::string::npos) {
+                        value = Value(static_cast<int>(std::stof(str)));
+                    } else {
+                        value = Value(std::stoi(str));
+                    }
+                } catch (...) {}
+            }
+        } else if (declType == "string") {
+            if (!value.isString()) {
+                value = Value(value.stringify());
+            }
+        }
     } else {
         // Set type-appropriate defaults for uninitialized typed vars
         std::string t = varDecl->type.m_lexeme;
